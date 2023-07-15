@@ -1,0 +1,193 @@
+import java.io.DataInputStream;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.*;
+
+class Node implements Comparator<Node> {
+    int vertex;
+    int cost;
+
+    Node() {
+    }
+
+    Node(int vertex, int cost) {
+        this.vertex = vertex;
+        this.cost = cost;
+    }
+
+    @Override
+    public int compare(Node node1, Node node2) {
+        return Long.compare(node1.vertex, node2.vertex);
+    }
+}
+
+public class WeightedGraph {
+    ArrayList<ArrayList<Node>> adjacencyList;
+
+    WeightedGraph(int size) {
+        adjacencyList = new ArrayList<>(size);
+        for (int i = 0; i < size; i++) {
+            adjacencyList.add(new ArrayList<>());
+        }
+    }
+
+    void addEdge(int source, int destination, int weight) {
+        adjacencyList.get(source).add(new Node(destination, weight));
+        // adjacencyList.get(destination).add(new Node(source, weight));
+    }
+
+    public int dijkstra(int[] distance, int start, int destination) {
+        PriorityQueue<Node> minHeap = new PriorityQueue<>(new Node());
+        minHeap.add(new Node(start, 0));
+        distance[start] = 0;
+        while (!minHeap.isEmpty()) {
+            int currentVertex = minHeap.remove().vertex;
+            int currentDistance = distance[currentVertex];
+            for (int i = 0; i < adjacencyList.get(currentVertex).size(); i++) {
+                Node path = adjacencyList.get(currentVertex).get(i);
+                int nextVertex = path.vertex;
+                int edgeCost = path.cost;
+                int totalDistance = currentDistance + edgeCost;
+                if (totalDistance < distance[nextVertex]) {
+                    distance[nextVertex] = totalDistance;
+                    minHeap.add(new Node(nextVertex, distance[nextVertex]));
+                }
+            }
+        }
+        if (distance[destination] == Integer.MAX_VALUE) {
+            return -1;
+        }
+        return distance[destination];
+    }
+
+    static class Reader {
+        final private int BUFFER_SIZE = 1 << 16;
+        private DataInputStream din;
+        private byte[] buffer;
+        private int bufferPointer, bytesRead;
+
+        public Reader() {
+            din = new DataInputStream(System.in);
+            buffer = new byte[BUFFER_SIZE];
+            bufferPointer = bytesRead = 0;
+        }
+
+        public Reader(String file_name) throws IOException {
+            din = new DataInputStream(new FileInputStream(file_name));
+            buffer = new byte[BUFFER_SIZE];
+            bufferPointer = bytesRead = 0;
+        }
+
+        public String readLine() throws IOException {
+            byte[] buf = new byte[64]; // line length
+            int cnt = 0, c;
+            while ((c = read()) != -1) {
+                if (c == '\n')
+                    break;
+                buf[cnt++] = (byte) c;
+            }
+            return new String(buf, 0, cnt);
+        }
+
+        public int nextInt() throws IOException {
+            int ret = 0;
+            byte c = read();
+            while (c <= ' ')
+                c = read();
+            boolean neg = (c == '-');
+            if (neg)
+                c = read();
+            do {
+                ret = ret * 10 + c - '0';
+            } while ((c = read()) >= '0' && c <= '9');
+
+            if (neg)
+                return -ret;
+            return ret;
+        }
+
+        public long nextLong() throws IOException {
+            long ret = 0;
+            byte c = read();
+            while (c <= ' ')
+                c = read();
+            boolean neg = (c == '-');
+            if (neg)
+                c = read();
+            do {
+                ret = ret * 10 + c - '0';
+            } while ((c = read()) >= '0' && c <= '9');
+            if (neg)
+                return -ret;
+            return ret;
+        }
+
+        public double nextDouble() throws IOException {
+            double ret = 0, div = 1;
+            byte c = read();
+            while (c <= ' ')
+                c = read();
+            boolean neg = (c == '-');
+            if (neg)
+                c = read();
+
+            do {
+                ret = ret * 10 + c - '0';
+            } while ((c = read()) >= '0' && c <= '9');
+
+            if (c == '.') {
+                while ((c = read()) >= '0' && c <= '9') {
+                    ret += (c - '0') / (div *= 10);
+                }
+            }
+
+            if (neg)
+                return -ret;
+            return ret;
+        }
+
+        private void fillBuffer() throws IOException {
+            bytesRead = din.read(buffer, bufferPointer = 0, BUFFER_SIZE);
+            if (bytesRead == -1)
+                buffer[0] = -1;
+        }
+
+        private byte read() throws IOException {
+            if (bufferPointer == bytesRead)
+                fillBuffer();
+            return buffer[bufferPointer++];
+        }
+
+        public void close() throws IOException {
+            if (din == null)
+                return;
+            din.close();
+        }
+    }
+
+    public static void main(String[] args) throws IOException {
+        // Reader input = new Reader();
+        Scanner input = new Scanner(System.in);
+        int numQueries = input.nextInt();
+        int numVertices = input.nextInt();
+        WeightedGraph g = new WeightedGraph(numVertices);
+        int[] distance = new int[numVertices];
+
+        int numEdges = input.nextInt();
+        for (int i = 0; i < numEdges; i++) {
+            int source = input.nextInt() - 1;
+            int destination = input.nextInt() - 1;
+            int weight = input.nextInt();
+            g.addEdge(source, destination, weight);
+        }
+
+        for (int j = 0; j < numQueries; j++) {
+            for (int i = 0; i < numVertices; i++) {
+                distance[i] = Integer.MAX_VALUE;
+            }
+            int startVertex = input.nextInt() - 1;
+            int destinationVertex = input.nextInt() - 1;
+            System.out.println(g.dijkstra(distance, startVertex, destinationVertex));
+        }
+    }
+}
