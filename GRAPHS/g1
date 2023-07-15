@@ -1,0 +1,97 @@
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.Scanner;
+
+public class GRAPH {
+    static void addEdge(ArrayList<ArrayList<Integer>> g, int u, int v) {
+        g.get(u).add(v);
+        g.get(v).add(u);
+    }
+
+    static void BFS(ArrayList<ArrayList<Integer>> g, int pos) {
+        boolean visited[] = new boolean[g.size()];
+        visited[pos] = true;
+        Queue<Integer> q = new LinkedList<Integer>();
+        q.add(pos);
+        while (!q.isEmpty()) {
+            int u = q.remove();
+            System.out.print(u + " ");
+            for (int i = 0; i < g.get(pos).size(); i++) {
+                int n = g.get(pos).get(i);
+                if (!visited[n]) {
+                    visited[n] = true;
+                    q.add(n);
+                }
+            }
+        }
+    }
+
+    static void DFS(ArrayList<ArrayList<Integer>> g, int pos, boolean visited[]) {
+        visited[pos] = true;
+        System.out.print((pos + 1) + " ");
+        for (int i = 0; i < g.get(pos).size(); i++) {
+            int u = g.get(pos).get(i);
+            if (!visited[u]) {
+                DFS(g, u, visited);
+            }
+        }
+
+    }
+
+    static boolean cycle_detection(ArrayList<ArrayList<Integer>> g, int pos, boolean[] visited, int parent) {
+        visited[pos] = true;
+        if (visited[pos] && parent != pos) {
+            return true;
+        }
+        for (int i = 0; i < g.get(pos).size(); i++) {
+            int u = g.get(pos).get(i);
+            if (!visited[u]) {
+                parent = pos;
+                System.out.print((parent + 1) + " ");
+                cycle_detection(g, u, visited, parent);
+            }
+        }
+        return false;
+
+    }
+
+    static void is_connected_gaph(ArrayList<ArrayList<Integer>> g, boolean visited[]) {
+        DFS(g, 1, visited);
+        for (int i = 0; i < g.size(); i++) {
+            if (!visited[i]) {
+                System.out.println();
+                DFS(g, i, visited);
+            }
+        }
+    }
+    static void printGraph(ArrayList<ArrayList<Integer>> g) {
+            for (int i = 0; i < g.size(); i++) {
+                System.out.println("\nAdjacency list of vertex" + (i + 1));
+                for (int j = 0; j < g.get(i).size(); j++) {
+                    System.out.print(" -> " + (g.get(i).get(j) + 1));
+                }
+                System.out.println();
+            }
+        }
+
+    public static void main(String[] args) {
+        Scanner input = new Scanner(System.in);
+        int V = input.nextInt();
+        ArrayList<ArrayList<Integer>> g = new ArrayList<ArrayList<Integer>>(V);
+        for (int i = 0; i < V; i++) {
+            g.add(new ArrayList<Integer>());
+        }
+        while (input.hasNextInt()) {
+            int u = input.nextInt() - 1;
+            int v = input.nextInt() - 1;
+            addEdge(g, u, v);
+        }
+        printGraph(g);
+        boolean visited[] = new boolean[V];
+        System.out.println();
+//        is_connected_gaph(g, visited);
+        System.out.println(cycle_detection(g, 0, visited, -1));
+    }
+}
