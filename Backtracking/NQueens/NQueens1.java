@@ -2,14 +2,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Solution: Brute Force approach:
- *
- * Generate all possible arrangement to place N queens on N*N board. Check each
- * board if queens are placed safely. If it is safe, include arrangement in
- * solution set. Otherwise ignore it
- *
- * Optimized solution: This can be solved using backtracking in below steps
- *
  * Start with first column and place queen on first row Try placing queen in a
  * row on second column If placing second queen in second column attacks any of
  * the previous queens, change the row in second column otherwise move to next
