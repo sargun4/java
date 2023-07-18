@@ -1,3 +1,4 @@
+// The Node class represents a node in the linked list used for chaining collisions. It contains the data (string) and a hash code. 
 class Main{
     public static void main(String[] args) {
         HashMap nn = new HashMap();
