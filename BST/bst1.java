@@ -122,7 +122,82 @@ public class bst1 {
             inorderTraversal(root.right);
         }
     }
+    public int findMax() {
+        if (root == null) {
+            throw new IllegalStateException("BST is empty.");
+        }
 
+        TreeNode current = root;
+        while (current.right != null) {
+            current = current.right;
+        }
+        return current.val;
+    }
+
+    // Find the minimum value in the BST
+    public int findMin() {
+        if (root == null) {
+            throw new IllegalStateException("BST is empty.");
+        }
+
+        TreeNode current = root;
+        while (current.left != null) {
+            current = current.left;
+        }
+        return current.val;
+    }
+
+    // Check if a given value exists in the BST
+    public boolean search(int val) {
+        TreeNode current = root;
+        while (current != null) {
+            if (val == current.val) {
+                return true;
+            } else if (val < current.val) {
+                current = current.left;
+            } else {
+                current = current.right;
+            }
+        }
+        return false;
+    }
+
+    // Find the height of the BST
+    public int findHeight() {
+        return getHeight(root);
+    }
+
+    private int getHeight(TreeNode node) {
+        if (node == null) {
+            return -1;
+        }
+        return Math.max(getHeight(node.left), getHeight(node.right)) + 1;
+    }
+
+    // Level order traversal of the BST
+    public void levelOrderTraversal() {
+        if (root == null) {
+            return;
+        }
+
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.offer(root);
+
+        System.out.print("Level Order Traversal: ");
+        while (!queue.isEmpty()) {
+            TreeNode node = queue.poll();
+            System.out.print(node.val + " ");
+
+            if (node.left != null) {
+                queue.offer(node.left);
+            }
+            if (node.right != null) {
+                queue.offer(node.right);
+            }
+        }
+
+        System.out.println();
+    }
     public static void main(String[] args) {
         BinarySearchTree bst = new BinarySearchTree();
         int[] values = {5, 3, 7, 2, 4, 6, 8};
@@ -138,6 +213,24 @@ public class bst1 {
 
         bst.delete(5);
         bst.printInorder(); //Inorder Traversal: 2 3 4 6 7 8
+        int maxVal = bst.findMax();
+        System.out.println("Maximum value in BST: " + maxVal); // Output: Maximum value in BST: 8
+
+        // Find and print the minimum value in the BST
+        int minVal = bst.findMin();
+        System.out.println("Minimum value in BST: " + minVal); // Output: Minimum value in BST: 2
+
+        // Check if a value exists in the BST
+        int searchValue = 6;
+        boolean exists = bst.search(searchValue);
+        System.out.println("Value " + searchValue + " exists in BST: " + exists); // Output: Value 6 exists in BST: true
+
+        // Find and print the height of the BST
+        int height = bst.findHeight();
+        System.out.println("Height of BST: " + height); // Output: Height of BST: 2
+
+        // Perform level order traversal of the BST
+        bst.levelOrderTraversal(); 
     }
 }
 
