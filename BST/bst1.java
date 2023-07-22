@@ -198,6 +198,126 @@ public class bst1 {
 
         System.out.println();
     }
+    public boolean isBalanced() {
+        return checkBalanced(root) != -1;
+    }
+
+    private int checkBalanced(TreeNode node) {
+        if (node == null) {
+            return 0;
+        }
+
+        int leftHeight = checkBalanced(node.left);
+        int rightHeight = checkBalanced(node.right);
+
+        if (leftHeight == -1 || rightHeight == -1 || Math.abs(leftHeight - rightHeight) > 1) {
+            return -1;
+        }
+
+        return Math.max(leftHeight, rightHeight) + 1;
+    }
+
+    // Convert a sorted array to a balanced BST
+    public TreeNode sortedArrayToBST(int[] nums) {
+        return sortedArrayToBST(nums, 0, nums.length - 1);
+    }
+
+    private TreeNode sortedArrayToBST(int[] nums, int left, int right) {
+        if (left > right) {
+            return null;
+        }
+
+        int mid = left + (right - left) / 2;
+        TreeNode root = new TreeNode(nums[mid]);
+
+        root.left = sortedArrayToBST(nums, left, mid - 1);
+        root.right = sortedArrayToBST(nums, mid + 1, right);
+
+        return root;
+    }
+
+    // Find the kth smallest element in the BST
+    public int kthSmallest(int k) {
+        List<Integer> inorderList = new ArrayList<>();
+        inOrderTraversal(root, inorderList);
+        return inorderList.get(k - 1);
+    }
+
+    // Find the kth largest element in the BST
+    public int kthLargest(int k) {
+        List<Integer> reverseInorderList = new ArrayList<>();
+        reverseInOrderTraversal(root, reverseInorderList);
+        return reverseInorderList.get(k - 1);
+    }
+    public int size() {
+        return countNodes(root);
+    }
+
+    private int countNodes(TreeNode node) {
+        if (node == null) {
+            return 0;
+        }
+
+        return 1 + countNodes(node.left) + countNodes(node.right);
+    }
+
+    // Find the sum of all values in the BST
+    public int sum() {
+        return computeSum(root);
+    }
+
+    private int computeSum(TreeNode node) {
+        if (node == null) {
+            return 0;
+        }
+
+        return node.val + computeSum(node.left) + computeSum(node.right);
+    }
+
+    // Check if the BST is a valid Binary Search Tree
+    public boolean isValidBST() {
+        return isValidBST(root, Long.MIN_VALUE, Long.MAX_VALUE);
+    }
+
+    private boolean isValidBST(TreeNode node, long minVal, long maxVal) {
+        if (node == null) {
+            return true;
+        }
+
+        if (node.val <= minVal || node.val >= maxVal) {
+            return false;
+        }
+
+        return isValidBST(node.left, minVal, node.val) && isValidBST(node.right, node.val, maxVal);
+    }
+
+    // Convert a Binary Search Tree to a sorted doubly linked list
+    public TreeNode convertToDLL() {
+        TreeNode[] prev = new TreeNode[1];
+        TreeNode[] head = new TreeNode[1];
+        convertToDLL(root, prev, head);
+        return head[0];
+    }
+
+    private void convertToDLL(TreeNode node, TreeNode[] prev, TreeNode[] head) {
+        if (node == null) {
+            return;
+        }
+
+        convertToDLL(node.left, prev, head);
+
+        if (prev[0] == null) {
+            head[0] = node;
+        } else {
+            prev[0].right = node;
+            node.left = prev[0];
+        }
+
+        prev[0] = node;
+
+        convertToDLL(node.right, prev, head);
+    }
+    
     public static void main(String[] args) {
         BinarySearchTree bst = new BinarySearchTree();
         int[] values = {5, 3, 7, 2, 4, 6, 8};
@@ -214,23 +334,58 @@ public class bst1 {
         bst.delete(5);
         bst.printInorder(); //Inorder Traversal: 2 3 4 6 7 8
         int maxVal = bst.findMax();
-        System.out.println("Maximum value in BST: " + maxVal); // Output: Maximum value in BST: 8
+        System.out.println("Maximum value in BST: " + maxVal); //Maximum value in BST: 8
 
         // Find and print the minimum value in the BST
         int minVal = bst.findMin();
-        System.out.println("Minimum value in BST: " + minVal); // Output: Minimum value in BST: 2
+        System.out.println("Minimum value in BST: " + minVal); //Minimum value in BST: 2
 
         // Check if a value exists in the BST
         int searchValue = 6;
         boolean exists = bst.search(searchValue);
-        System.out.println("Value " + searchValue + " exists in BST: " + exists); // Output: Value 6 exists in BST: true
+        System.out.println("Value " + searchValue + " exists in BST: " + exists); //Value 6 exists in BST: true
 
         // Find and print the height of the BST
         int height = bst.findHeight();
-        System.out.println("Height of BST: " + height); // Output: Height of BST: 2
+        System.out.println("Height of BST: " + height); //Height of BST: 2
 
         // Perform level order traversal of the BST
         bst.levelOrderTraversal(); 
+
+        boolean isBalanced = bst.isBalanced();
+        System.out.println("Is the BST balanced? " + isBalanced); //Is the BST balanced? true
+
+        // Convert a sorted array to a balanced BST
+        int[] sortedArray = {1, 2, 3, 4, 5, 6, 7, 8};
+        TreeNode balancedBST = bst.sortedArrayToBST(sortedArray);
+        bst.root = balancedBST;
+        bst.printInorder(); //Inorder Traversal: 1 2 3 4 5 6 7 8
+
+        // Find the kth smallest and largest elements in the BST
+        int k = 3;
+        int kthSmallest = bst.kthSmallest(k);
+        int kthLargest = bst.kthLargest(k);
+        System.out.println("Kth Smallest Element: " + kthSmallest); //Kth Smallest Element: 3
+        System.out.println("Kth Largest Element: " + kthLargest); //Kth Largest Element: 6
+        int size = bst.size();
+        System.out.println("Number of nodes in the BST: " + size); //Number of nodes in the BST: 7
+
+        // Find and print the sum of all values in the BST
+        int sum = bst.sum();
+        System.out.println("Sum of all values in the BST: " + sum); //Sum of all values in the BST: 35
+
+        // Check if the BST is a valid Binary Search Tree
+        boolean isValid = bst.isValidBST();
+        System.out.println("Is the BST a valid Binary Search Tree? " + isValid); //Is the BST a valid Binary Search Tree? true
+
+        // Convert the BST to a sorted doubly linked list and print the list
+        TreeNode head = bst.convertToDLL();
+        System.out.print("Sorted Doubly Linked List: ");
+        while (head != null) {
+            System.out.print(head.val + " ");
+            head = head.right;
+        }
+        //Sorted Doubly Linked List: 2 3 4 5 6 7 8
     }
 }
 
