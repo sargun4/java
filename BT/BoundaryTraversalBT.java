@@ -76,3 +76,80 @@ public class Main {
 
     }
 }
+
+// //alt
+// class TreeNode {
+//     int val;
+//     TreeNode left;
+//     TreeNode right;
+
+//     TreeNode(int val) {
+//         this.val = val;
+//     }
+// }
+
+// public class BoundaryTraversalBinaryTree {
+//     public static void boundaryTraversal(TreeNode root) {
+//         if (root == null) return;
+
+//         System.out.print(root.val + " ");
+
+//         // Traverse left boundary (excluding the leftmost leaf)
+//         traverseLeftBoundary(root.left);
+
+//         // Traverse leaves of the binary tree
+//         traverseLeaves(root.left);
+//         traverseLeaves(root.right);
+
+//         // Traverse right boundary (excluding the rightmost leaf)
+//         traverseRightBoundary(root.right);
+//     }
+
+//     private static void traverseLeftBoundary(TreeNode node) {
+//         if (node == null || (node.left == null && node.right == null)) return;
+
+//         System.out.print(node.val + " ");
+
+//         if (node.left != null)
+//             traverseLeftBoundary(node.left);
+//         else if (node.right != null)
+//             traverseLeftBoundary(node.right);
+//     }
+
+//     private static void traverseLeaves(TreeNode node) {
+//         if (node == null) return;
+
+//         if (node.left == null && node.right == null)
+//             System.out.print(node.val + " ");
+
+//         traverseLeaves(node.left);
+//         traverseLeaves(node.right);
+//     }
+
+//     private static void traverseRightBoundary(TreeNode node) {
+//         if (node == null || (node.left == null && node.right == null)) return;
+
+//         if (node.right != null)
+//             traverseRightBoundary(node.right);
+//         else if (node.left != null)
+//             traverseRightBoundary(node.left);
+
+//         System.out.print(node.val + " ");
+//     }
+
+//     public static void main(String[] args) {
+//         // Create a sample binary tree
+//         TreeNode root = new TreeNode(1);
+//         root.left = new TreeNode(2);
+//         root.right = new TreeNode(3);
+//         root.left.left = new TreeNode(4);
+//         root.left.right = new TreeNode(5);
+//         root.right.left = new TreeNode(6);
+//         root.right.right = new TreeNode(7);
+//         root.left.left.left = new TreeNode(8);
+//         root.left.left.right = new TreeNode(9);
+
+//         System.out.println("Boundary Traversal of Binary Tree:");
+//         boundaryTraversal(root); // Output: 1 2 4 8 9 5 6 7 3
+//     }
+// }
