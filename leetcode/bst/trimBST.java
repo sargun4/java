@@ -21,6 +21,7 @@ class Solution {
         return parent.left;
     }
 }
+
 // class Solution {
 //     public TreeNode trimBST(TreeNode root, int low, int high) {
 //         if (root == null) return null;
