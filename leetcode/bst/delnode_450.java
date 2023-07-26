@@ -15,7 +15,6 @@ class Solution {
         }else{//node found, del it
             if(root.left==null){
                 TreeNode temp=root.right;
-                // free(root);
                 return temp;
             }
             else if(root.right==null){
